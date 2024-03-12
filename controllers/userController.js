@@ -11,7 +11,7 @@ const generateToken = (id) =>{
 
 // Define the registerUser route handler function
 const registerUser = asyncHandler(async (req, res) => {
-    const {name,email,password} = req.body;
+    const {name,email,password,role} = req.body;
     if(!name || !email || !password){
         res.status(400);
         throw new Error("Please fill in all required fields");
@@ -30,7 +30,8 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         name,
         email,
-        password
+        password,
+        role
     })
 
     const token  = generateToken(user._id);
@@ -127,13 +128,14 @@ const getLoginStatus = asyncHandler (async(req,res)=>{
 
 const updateUser = asyncHandler (async (req,res)=>{
     const user  =await  User.findById(req.user._id);
-  console.log(user.name);
+    console.log(user.name);
     if(user){
-        const {name,phone,password} = user;
+        const {name,phone,password,address} = user;
         user.name = req.body.name || name;
        
         user.phone = req.body.phone || phone;
         user.password = req.body.password || password;
+        user.address = req.body.address || address;
 
         const updatedUser = await user.save();
         res.status(200).json(updatedUser);
@@ -156,6 +158,32 @@ const updatePhoto = asyncHandler (async(req,res)=>{
     res.status(200).json(updatedPhoto);
     
 })
+
+//save cart
+const saveCart = asyncHandler(async(req,res)=>{
+    const {cartItems} = req.body;
+    const user = await  User.findById(req.user._id);
+    if(user){
+       user.cartItems = cartItems;
+       user.save();
+       res.status(200).json({message:"Cart Saved"})
+    }else{
+      res.status(400);
+      throw new Error("User not found");
+    }
+})
+
+//get cart
+
+const getCart = asyncHandler (async(req,res)=>{
+    const user = await User.findById(req.user._id);
+    if(user){
+       res.status(200).json(user.cartItems)
+    }else{
+      res.status(400);
+      throw new Error("User not found");
+    }
+})
 module.exports = {
     registerUser,
     loginUser,
@@ -163,5 +191,7 @@ module.exports = {
     getUser,
     getLoginStatus,
     updateUser,
-    updatePhoto
+    updatePhoto,
+    saveCart,
+    getCart,
 };

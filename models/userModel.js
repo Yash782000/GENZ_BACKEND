@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema({
     photo:{
         type:String,
         required:[true,"please add a photo"],
-        default:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fuser-profile&psig=AOvVaw2uzrA3Ie3AP-5K66ax3aPz&ust=1707326215367000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCPD6n_ibl4QDFQAAAAAdAAAAABAE"
+        default:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw0w9nFQ-APv5h6qOC6YYhWE&ust=1707877989630000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCNjXlrmjp4QDFQAAAAAdAAAAABAE"
     },
     phone:{
         type:String,
@@ -40,7 +40,13 @@ const userSchema = mongoose.Schema({
     address:{
         type:Object,
         //address,state,country
+    },
+    cartItems:{
+        type:[Object],
+        
     }
+},{
+    timestamps:true
 })
 userSchema.pre("save",async function(next){
     if(!this.isModified("password")){

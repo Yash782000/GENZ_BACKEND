@@ -34,7 +34,22 @@ const protect = asyncHandler (async(req,res,next)=>{
     }
 })
 
+//Admin Only
+
+const adminOnly = (req,res,next) =>{
+    if(req.user && req.user.role){
+        next()
+    }
+    else{
+        res.status(401);
+        throw new Error("User is not authorized as an Admin")
+    }
+}
+
+
+
 
 module.exports = {
-    protect
+    protect,
+    adminOnly
 }
